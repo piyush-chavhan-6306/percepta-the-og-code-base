@@ -1,0 +1,7 @@
+# Start the Backend
+cd "d:\New Compressed (zipped) Folder\SIH   border cctv"
+.\venv\Scripts\python -m uvicorn backend.main:app --port 8000
+
+# Start the Frontend
+cd "d:\New Compressed (zipped) Folder\SIH   border cctv\frontend"
+npm run dev

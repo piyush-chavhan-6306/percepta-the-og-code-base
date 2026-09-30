@@ -1,0 +1,35 @@
+services:
+  - type: web
+    name: percepta-online-backend
+    env: python
+    region: oregon
+    plan: free
+    rootDir: online
+    buildCommand: "pip install --upgrade pip && pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu && pip install -r requirements.txt && pip uninstall -y opencv-python opencv-python-headless && pip install opencv-python-headless"
+    startCommand: "python -m uvicorn backend.main:app --host 0.0.0.0 --port $PORT --workers 1"
+    healthCheckPath: "/health"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: PORT
+        value: 10000
+      - key: ENVIRONMENT
+        value: production
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: DATABASE_URL
+        value: "postgresql+asyncpg://neondb_owner:npg_GDT2jCNQ6oPO@ep-divine-butterfly-b44pjagv-pooler.c-6.us-east-2.aws.neon.tech/neondb?ssl=require"
+      - key: SUPABASE_URL
+        value: "https://apcidwqjjjevwphtytrm.supabase.co"
+      - key: SUPABASE_ANON_KEY
+        value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwY2lkd3FqampldndwaHR5dHJtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA1Njc4MDAsImV4cCI6MjEwNjE0MzgwMH0.kXJtx4Wp1MqeWl16tCaTHESozJX8jQMGsrdVE36VwdU"
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        value: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwY2lkd3FqampldndwaHR5dHJtIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MDU2NzgwMCwiZXhwIjoyMTA2MTQzODAwfQ.vCbOZtxQGici9NL5xGoN5PSRJawcSgYjk-VH2z_4hjU"
+      - key: RAW_VIDEO_RETENTION_HOURS
+        value: "24"
+      - key: RETENTION_CHECK_INTERVAL_SECONDS
+        value: "3600"
+      - key: MAX_UPLOAD_CHUNK_SIZE_MB
+        value: "25"
+      - key: DEMO_MODE
+        value: "false"

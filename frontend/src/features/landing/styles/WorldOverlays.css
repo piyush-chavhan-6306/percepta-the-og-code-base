@@ -1,0 +1,774 @@
+/* ═══════════════════════════════════════════════════════════════════════════════
+   PERCEPTA DEFENSE — 3D Earth World Overlays (Calibrated & Centered)
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --bg: #05070a;
+  --ink: #e8ebe6;
+  --muted: #869099;
+  --line: rgba(0, 229, 255, 0.18);
+  --cyan: #00e5ff;
+  --warm: #ffab00;
+  --red: #ff1744;
+  --emerald: #00e676;
+}
+
+.landing {
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+.earth-layer {
+  position: fixed;
+  inset: 0;
+  height: 100vh;
+  margin: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.earth-layer canvas {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.world-overlays {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  color: #b7c7c1;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  font-family: 'DM Mono', monospace;
+}
+
+/* ── Individual Stage Overlay Containers (Smooth Scroll Weight Driven) ───────── */
+.overlay-stage-container {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+/* ── 01. Observe Overlays ─────────────────────────────────────────────────── */
+.orbit-label {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--cyan);
+  white-space: nowrap;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  background: rgba(5, 10, 12, 0.7);
+  padding: 4px 10px;
+  border: 1px solid rgba(158, 231, 223, 0.25);
+  backdrop-filter: blur(4px);
+}
+
+.orbit-label small {
+  color: var(--warm);
+  font-size: 7.5px;
+  border-left: 1px solid rgba(158, 231, 223, 0.3);
+  padding-left: 6px;
+  margin-left: 4px;
+}
+
+.signal-dot {
+  width: 5px;
+  height: 5px;
+  background: var(--cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--cyan);
+  animation: signal-blink 2s ease-in-out infinite;
+}
+
+@keyframes signal-blink {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.cam-a {
+  left: 56%;
+  top: 26%;
+}
+
+.cam-b {
+  left: 72%;
+  top: 42%;
+}
+
+.cam-c {
+  left: 62%;
+  top: 68%;
+}
+
+.orbit-label.active-anchor {
+  border-color: rgba(158, 231, 223, 0.6);
+  background: rgba(5, 14, 18, 0.88);
+  box-shadow: 0 0 16px rgba(158, 231, 223, 0.22);
+}
+
+.signal-dot.active-dot {
+  background: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan);
+  animation: signal-blink 1.2s ease-in-out infinite;
+}
+
+.camera-network-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.orbit-ring {
+  position: absolute;
+  border: 1px dashed rgba(158, 231, 223, 0.22);
+  border-radius: 50%;
+  width: 28vw;
+  height: 14vw;
+  left: 48%;
+  top: 42%;
+  transform: rotate(-24deg);
+  animation: ring-drift 12s ease-in-out infinite;
+}
+
+.ring-two {
+  width: 22vw;
+  height: 11vw;
+  left: 51%;
+  top: 46%;
+  transform: rotate(22deg);
+  border-color: rgba(214, 193, 155, 0.22);
+  animation: ring-drift-two 14s ease-in-out infinite;
+}
+
+/* ── 02. Detect Overlays (Tactical High-Fidelity Bounding Boxes) ──────────── */
+.detection-field {
+  position: absolute;
+  inset: 0;
+}
+
+.tactical-box {
+  position: absolute;
+  border: 1px solid rgba(158, 231, 223, 0.35);
+  background: rgba(158, 231, 223, 0.04);
+  backdrop-filter: blur(1px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px;
+  box-shadow: 0 0 20px rgba(158, 231, 223, 0.08);
+  transition: all 0.3s;
+}
+
+.tactical-box-corners::before,
+.tactical-box-corners::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-color: var(--cyan);
+  border-style: solid;
+}
+
+.tactical-box-corners::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1.5px 0 0 1.5px;
+}
+
+.tactical-box-corners::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 1.5px 1.5px 0;
+}
+
+.box-tag {
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: var(--cyan);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.box-tag b {
+  font-weight: 500;
+}
+
+.box-conf {
+  color: var(--warm);
+  font-size: 7px;
+}
+
+.box-reticle {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(158, 231, 223, 0.6), transparent);
+  animation: scan-vertical 2.6s ease-in-out infinite;
+}
+
+@keyframes scan-vertical {
+  0%, 100% { transform: translateY(0); opacity: 0.2; }
+  50% { transform: translateY(30px); opacity: 0.9; }
+}
+
+.box-person {
+  left: 22%;
+  top: 40%;
+  width: 80px;
+  height: 110px;
+}
+
+.box-vehicle {
+  left: 36%;
+  top: 24%;
+  width: 130px;
+  height: 85px;
+}
+
+.box-plate {
+  left: 32%;
+  top: 64%;
+  width: 85px;
+  height: 48px;
+}
+
+.box-face {
+  left: 45%;
+  top: 68%;
+  width: 65px;
+  height: 65px;
+}
+
+/* ── 03. Track Overlays (Centered & High-Tech) ────────────────────────────── */
+.track-journey-centered {
+  position: absolute;
+  right: 14%;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(6, 12, 14, 0.85);
+  border: 1px solid rgba(158, 231, 223, 0.35);
+  border-left: 3px solid var(--cyan);
+  padding: 22px 26px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  min-width: 290px;
+}
+
+.track-id {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--cyan);
+  margin-bottom: 18px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+}
+
+.track-id b {
+  color: var(--warm);
+  font-weight: 500;
+  font-size: 11px;
+}
+
+.track-route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: #d8e1da;
+  font-size: 10px;
+  margin: 14px 0;
+}
+
+.track-route span {
+  background: rgba(158, 231, 223, 0.08);
+  padding: 4px 8px;
+  border: 1px solid rgba(158, 231, 223, 0.2);
+}
+
+.track-route i {
+  flex: 1;
+  height: 1px;
+  background: var(--cyan);
+  position: relative;
+  display: block;
+}
+
+.track-route i:after {
+  content: '›';
+  position: absolute;
+  right: -2px;
+  top: -8px;
+  color: var(--cyan);
+  font-size: 14px;
+}
+
+.track-journey-centered small {
+  display: block;
+  color: #82928f;
+  font-size: 7.5px;
+  letter-spacing: 0.12em;
+  margin-top: 14px;
+}
+
+/* ── 04. Understand Overlays (Centered Radar Sweep) ──────────────────────── */
+.context-radar-centered {
+  position: absolute;
+  left: 20%;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 220px;
+  width: 220px;
+  border: 1px solid rgba(158, 231, 223, 0.25);
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle,
+    transparent 0 34px,
+    rgba(158, 231, 223, 0.08) 35px 36px
+  );
+  box-shadow: 0 0 35px rgba(158, 231, 223, 0.08);
+}
+
+.context-radar-centered:after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  height: 1.5px;
+  width: 50%;
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--cyan), transparent);
+  animation: radar-sweep 5s linear infinite;
+}
+
+.radar-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: var(--cyan);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(5, 9, 11, 0.85);
+  padding: 10px 14px;
+  border: 1px solid rgba(158, 231, 223, 0.3);
+  border-radius: 4px;
+}
+
+.radar-core b {
+  font-size: 11px;
+  color: var(--warm);
+  font-weight: 500;
+}
+
+.context-tag {
+  position: absolute;
+  color: #b0c2bc;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  background: rgba(5, 10, 12, 0.85);
+  padding: 3px 7px;
+  border: 1px solid rgba(158, 231, 223, 0.2);
+}
+
+.context-tag.zone {
+  left: -20px;
+  top: 35px;
+}
+.context-tag.movement {
+  right: -30px;
+  top: 85px;
+}
+.context-tag.time {
+  left: 15px;
+  bottom: 8px;
+}
+.context-tag.direction {
+  right: 15px;
+  bottom: 35px;
+}
+
+/* ── 05. Assess Overlays (Centered Score Card) ────────────────────────────── */
+.risk-reading-centered {
+  position: absolute;
+  right: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: right;
+  color: var(--warm);
+  min-width: 240px;
+  background: rgba(6, 12, 14, 0.88);
+  border: 1px solid rgba(226, 119, 102, 0.35);
+  border-right: 3px solid var(--red);
+  padding: 24px 28px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+}
+
+.risk-reading-centered p {
+  color: var(--cyan);
+  font-size: 8.5px;
+  margin: 0 0 10px;
+  letter-spacing: 0.18em;
+}
+
+.risk-reading-centered strong {
+  font: 500 88px / 0.8 'Barlow Condensed', sans-serif;
+  display: block;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
+.risk-reading-centered strong small {
+  font: 400 18px 'DM Mono', monospace;
+  color: #8e9e9a;
+}
+
+.risk-reading-centered > span {
+  display: block;
+  color: var(--red);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  margin: 14px 0 20px;
+  font-weight: 500;
+}
+
+.risk-reading-centered div {
+  border-top: 1px solid var(--line);
+  padding: 10px 0;
+  color: #92a29e;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.risk-reading-centered div i {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: var(--red);
+  border-radius: 50%;
+  margin-right: 8px;
+  box-shadow: 0 0 6px var(--red);
+}
+
+/* ── 06. Evidence Overlays (Centered Crop Box) ────────────────────────────── */
+.evidence-frame-centered {
+  position: absolute;
+  left: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 20px;
+  align-items: flex-end;
+  background: rgba(6, 12, 14, 0.88);
+  border: 1px solid rgba(158, 231, 223, 0.35);
+  padding: 22px 26px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+}
+
+.evidence-image {
+  width: 160px;
+  height: 115px;
+  border: 1px solid var(--cyan);
+  background: linear-gradient(140deg, rgba(158, 231, 223, 0.2), rgba(9, 15, 17, 0.7));
+  position: relative;
+  overflow: hidden;
+}
+
+.evidence-image:after {
+  content: '';
+  position: absolute;
+  left: 38%;
+  top: 25%;
+  width: 42px;
+  height: 58px;
+  border: 1.5px solid var(--warm);
+  box-shadow: 0 0 12px rgba(214, 193, 155, 0.3);
+  animation: crop-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes crop-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+.evidence-image span {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  color: var(--cyan);
+  font-size: 7.5px;
+  letter-spacing: 0.1em;
+}
+
+.evidence-frame-centered p,
+.incident-result p {
+  color: var(--cyan);
+  font-size: 8.5px;
+  margin: 0 0 8px;
+  letter-spacing: 0.16em;
+}
+
+.evidence-frame-centered strong {
+  display: block;
+  font: 400 30px / 1 'Barlow Condensed', sans-serif;
+  color: var(--warm);
+  letter-spacing: 0.05em;
+  margin: 6px 0;
+}
+
+.evidence-frame-centered small {
+  display: block;
+  color: #8c9e9a;
+  font-size: 7.5px;
+  line-height: 1.8;
+  margin-top: 10px;
+  letter-spacing: 0.09em;
+}
+
+/* ── 07. Incident Overlays (Centered Convergence) ─────────────────────────── */
+.incident-convergence-centered {
+  position: absolute;
+  right: 15%;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: rgba(6, 12, 14, 0.88);
+  border: 1px solid rgba(158, 231, 223, 0.35);
+  padding: 24px 28px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+}
+
+.incident-signals {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #87938f;
+  font-size: 8.5px;
+  letter-spacing: 0.12em;
+}
+
+.incident-signals span {
+  background: rgba(158, 231, 223, 0.06);
+  padding: 4px 8px;
+  border: 1px solid rgba(158, 231, 223, 0.18);
+}
+
+.incident-signals span:before {
+  content: '+';
+  color: var(--cyan);
+  margin-right: 8px;
+}
+
+.convergence-line {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.convergence-line i {
+  display: block;
+  width: 64px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--cyan), var(--warm));
+  animation: convergence-pulse 2s ease-in-out infinite;
+}
+
+.convergence-line i:nth-child(2) {
+  animation-delay: 0.25s;
+}
+.convergence-line i:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+.incident-result {
+  border-left: 2px solid var(--cyan);
+  padding-left: 20px;
+  min-width: 200px;
+}
+
+.incident-result strong {
+  font: 400 28px / 1.1 'Barlow Condensed', sans-serif;
+  display: block;
+  color: var(--warm);
+  max-width: 190px;
+}
+
+.incident-result small {
+  display: block;
+  color: #8c9e9a;
+  font-size: 7.5px;
+  margin-top: 10px;
+  letter-spacing: 0.1em;
+}
+
+/* ── 08. Command Overlays (Dedicated Far-Right Placement, Zero Text Overlap) ── */
+.command-transition-right {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--cyan);
+  font-size: 8.5px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.command-mini {
+  margin-top: 14px;
+  width: 250px;
+  border: 1px solid rgba(158, 231, 223, 0.4);
+  background: rgba(5, 10, 12, 0.92);
+  padding: 18px 20px;
+  display: grid;
+  gap: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+}
+
+.command-mini:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1.5px;
+  background: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan);
+  animation: scan-line 3s ease-in-out infinite;
+}
+
+.command-mini b {
+  font: 500 26px / 1 'Barlow Condensed', sans-serif;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+.command-mini em {
+  font-style: normal;
+  color: var(--cyan);
+  font-size: 8.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.command-mini em i {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+.command-mini span {
+  color: #8c9e9a;
+  font-size: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.command-mini small {
+  color: var(--warm);
+  font-size: 7.5px;
+  letter-spacing: 0.1em;
+}
+
+/* ── Responsive Adaptations ───────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .track-journey-centered,
+  .risk-reading-centered,
+  .incident-convergence-centered,
+  .command-transition-right {
+    right: 8%;
+    transform: translateY(-50%) scale(0.9);
+  }
+  .context-radar-centered,
+  .evidence-frame-centered {
+    left: 8%;
+    transform: translateY(-50%) scale(0.9);
+  }
+}
+
+@media (max-width: 800px) {
+  .orbit-label.cam-a {
+    left: 45%;
+    top: 25%;
+  }
+  .orbit-label.cam-b {
+    left: 60%;
+    top: 38%;
+  }
+  .orbit-label.cam-c {
+    left: 50%;
+    top: 66%;
+  }
+  .orbit-ring {
+    width: 60vw;
+    height: 30vw;
+    left: 25%;
+    top: 45%;
+  }
+  .box-person {
+    left: 12%;
+    top: 42%;
+    width: 65px;
+    height: 90px;
+  }
+  .box-vehicle {
+    left: 28%;
+    top: 26%;
+    width: 100px;
+    height: 65px;
+  }
+  .box-plate {
+    left: 20%;
+    top: 66%;
+    width: 70px;
+    height: 40px;
+  }
+  .box-face {
+    left: 36%;
+    top: 70%;
+    width: 50px;
+    height: 50px;
+  }
+  .track-journey-centered,
+  .risk-reading-centered,
+  .incident-convergence-centered,
+  .command-transition-right,
+  .context-radar-centered,
+  .evidence-frame-centered {
+    left: 5% !important;
+    right: 5% !important;
+    top: auto;
+    bottom: 12%;
+    transform: none !important;
+    min-width: auto;
+  }
+}

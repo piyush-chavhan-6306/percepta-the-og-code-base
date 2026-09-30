@@ -1,0 +1,90 @@
+/**
+ * PERCEPTA DEFENSE OS — Unified Design Tokens & Theme Variables
+ * 
+ * These tokens define the visual language of the Landing Page and Authentication Portal.
+ * To integrate with your existing theme, override the CSS custom properties below in your
+ * global stylesheet or map them into your Tailwind configuration (see tokens.ts).
+ */
+
+:root {
+  /* ── 1. Color Palette (Old PERCEPTA Tactical Void & Electric Cyan) ── */
+  --percepta-void: #05070a;
+  --percepta-void-alt: #080c13;
+  --percepta-surface-dark: #080c13;
+  --percepta-surface-card: rgba(14, 20, 31, 0.88);
+  --percepta-surface-card-hover: rgba(20, 28, 43, 0.96);
+  --percepta-surface-elevated: #141c2b;
+  --percepta-glass-bg: rgba(14, 20, 31, 0.82);
+
+  /* Accent Luminescence — Old PERCEPTA C2 Palettes */
+  --percepta-cyan: #00e5ff;
+  --percepta-cyan-bright: #00e5ff;
+  --percepta-cyan-dim: rgba(0, 229, 255, 0.4);
+  --percepta-mint: #00e5ff;
+  --percepta-mint-active: #00c4dd;
+  --percepta-emerald: #00e676;
+  --percepta-gold: #ffab00;
+  --percepta-amber: #ffab00;
+  --percepta-crimson: #ff1744;
+  --percepta-crimson-dim: rgba(255, 23, 68, 0.25);
+  --percepta-blue: #2979ff;
+
+  /* Typography / Ink Shades */
+  --percepta-text-primary: #e8ebe6;
+  --percepta-text-bright: #ffffff;
+  --percepta-text-secondary: #cbd5e1;
+  --percepta-text-muted: #869099;
+  --percepta-text-dim: #64748b;
+  --percepta-text-placeholder: #475569;
+
+  /* Borders & Tactical HUD Grids */
+  --percepta-border-line: rgba(0, 229, 255, 0.16);
+  --percepta-border-subtle: rgba(255, 255, 255, 0.1);
+  --percepta-border-light: rgba(0, 229, 255, 0.25);
+  --percepta-border-highlight: #00e5ff;
+  --percepta-border-cyan: rgba(0, 229, 255, 0.4);
+
+  /* ── 2. Typography Stacks — Harmonized with Old Percepta C2 ─────── */
+  --font-percepta-title: 'Orbitron', 'Barlow Condensed', sans-serif;
+  --font-percepta-display: 'Barlow Condensed', 'Orbitron', sans-serif;
+  --font-percepta-heading: 'Space Grotesk', 'Rajdhani', 'Chakra Petch', sans-serif;
+  --font-percepta-mono: 'JetBrains Mono', 'DM Mono', monospace;
+  --font-percepta-body: 'Inter', 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* ── 3. Glow & Shadow Accents ──────────────────────────────────── */
+  --glow-cyan-sm: 0 0 10px rgba(0, 229, 255, 0.35);
+  --glow-cyan-md: 0 0 24px rgba(0, 229, 255, 0.3);
+  --glow-cyan-lg: 0 0 40px rgba(0, 229, 255, 0.45);
+  --glow-mint-sm: 0 0 10px rgba(0, 229, 255, 0.3);
+  --glow-mint-md: 0 0 20px rgba(0, 229, 255, 0.4);
+  --glow-gold-sm: 0 0 10px rgba(255, 171, 0, 0.35);
+  --shadow-tactical-card: 0 20px 50px -10px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 229, 255, 0.05);
+
+  /* ── 4. Tactical Border Radii ───────────────────────────────────────────── */
+  --radius-tactical-square: 0px;
+  --radius-tactical-sm: 2px;
+  --radius-tactical-md: 4px;
+  --radius-tactical-lg: 8px;
+  --radius-tactical-pill: 9999px;
+
+  /* ── 5. Motion & Easing Dynamics ────────────────────────────────────────── */
+  --ease-tactical-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-tactical-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --transition-tactical-fast: 0.15s ease-in-out;
+  --transition-tactical-normal: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-tactical-slow: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Utility Classes for Easy Overriding */
+.percepta-theme-void {
+  background-color: var(--percepta-void);
+  color: var(--percepta-text-secondary);
+}
+
+.percepta-theme-mono {
+  font-family: var(--font-percepta-mono);
+}
+
+.percepta-theme-display {
+  font-family: var(--font-percepta-display);
+}
