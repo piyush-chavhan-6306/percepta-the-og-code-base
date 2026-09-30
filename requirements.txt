@@ -24,3 +24,5 @@ slowapi>=0.1.9
 
 # Video upload (multipart form parsing for /api/cameras/upload)
 python-multipart>=0.0.9
+
+greenlet>=3.0.0
